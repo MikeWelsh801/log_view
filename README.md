@@ -21,6 +21,6 @@ log_viewer <Path-to-your-log-file>
 ```
 
 > [NOTE]
-> The log viewer assumes you're logs contain log levels (INFO, WARNING, ERROR, 
-CRITICAL) in all caps somewhere in the log. If this is not the case, filtering 
+> The log viewer assumes your logs contain log levels (INFO, WARNING, ERROR, 
+CRITICAL) in all caps somewhere in each log. If this is not the case, filtering 
 will not work, but you can still scroll and search the logs.
