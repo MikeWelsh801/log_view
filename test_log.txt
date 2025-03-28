@@ -1,0 +1,196 @@
+[ERROR] some error
+[CRITICAL] a worse error
+[ERROR] some error
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] another search but badly
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[ERROR] - Search term
+[ERROR] - Search term
+[ERROR] - Search term
+[ERROR] - Search term
+[ERROR] - Search term
+[ERROR] - Search term
+[INFO] - Search term
+[CRITICAL] a worse error
+[INFO] needle in haystack
+[ERROR] - Search term
+[ERROR] - Search term
+[ERROR] - Search term
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[INFO] - Search term
+[INFO] - Search term
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[INFO] - Search term
+[CRITICAL] a worse error
+[INFO] - Search term
+[INFO] - Search term
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[CRITICAL] a worse error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[ERROR] some error
+[ERROR] some error
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] - Search term
+[INFO] just some information
+[INFO] just some information
+[INFO] - Search term
+[ERROR] some error
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[INFO] - Search term
+[ERROR] some error
+[INFO] just some information
+[INFO] - Search term
+[INFO] - Search term
+[ERROR] some error
+[INFO] just some information
+[INFO] - Search term
+[INFO] - Search term
+[INFO] just some information
+[INFO] just some information
+[INFO] - Search term
+[ERROR] some error
+[INFO] just some information
+[ERROR] some error
+[ERROR] some error
+[INFO] just some information
+[INFO] just some information
+[DEBUG] - I'm debugging
+[DEBUG] - another debug
+[INFO] - Search term
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[ERROR] some error
+[INFO] just some information
+[INFO] - Search term
+[INFO] just some information
+[INFO] - Search term
+[INFO] just some information
+[INFO] - Search term
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[DEBUG] - I'm debugging
+[DEBUG] - I'm debugging
+[DEBUG] - I'm debugging
+[DEBUG] - I'm debugging
+[DEBUG] - I'm debugging
+[INFO] - Search term
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[INFO] just some information
+[DEBUG] - I'm debugging
+[INFO] just some information
+[DEBUG] - I'm debugging
+[INFO] just some information
+[DEBUG] - I'm debugging
+[INFO] just some information
+[DEBUG] - I'm debugging
+[INFO] - Search term
+[INFO] just some information
+[INFO] - Search term
+[INFO] just some information
+[INFO] - Search term
+[INFO] just some information
+[INFO] - Search term

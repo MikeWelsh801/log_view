@@ -1,8 +1,7 @@
-use std::{env, process};
 use color_eyre::Result;
+use std::{env, process};
 
-use log_viewer::{run, Config};
-
+use log_viewer::{Config, run};
 
 fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();

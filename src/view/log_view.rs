@@ -1,4 +1,5 @@
-use crate::{Filter, Message, Model, SearchMode};
+use crate::{Filter, Message, Model, SearchMode, get_filtered_logs};
+use color_eyre::eyre::Ok;
 use crossterm::event::{self, Event, KeyCode, KeyModifiers};
 use ratatui::Frame;
 use ratatui::{prelude::*, widgets::*};
@@ -23,6 +24,10 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
         .title("logs")
         .title_alignment(Alignment::Center);
 
+    let filtered_logs = get_filtered_logs(model);
+    let lines = filtered_logs.iter().map(|l| get_formatted_row(l)).collect();
+    let line_paragraph = Table::from(lines).block(block);
+
     let search = Paragraph::new(model.search_input.as_str())
         .style(match model.search_mode {
             SearchMode::None => Style::default(),
@@ -33,9 +38,6 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
                 .border_type(BorderType::Rounded)
                 .title("search"),
         );
-
-    let lines = model.logs.iter().map(|l| get_formatted_row(l)).collect();
-    let line_paragraph = Table::from(lines).block(block);
 
     render_opts(model, frame, opts_area);
     frame.render_widget(line_paragraph, log_area);
@@ -55,48 +57,28 @@ pub(crate) fn handle_event(m: &mut Model) -> color_eyre::Result<Option<Message>>
     Ok(None)
 }
 
-fn get_formatted_row(log: &String) -> Row {
-    if log.contains("INFO") {
-        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).cyan()
-    } else if log.contains("WARNING") {
-        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).yellow()
-    } else if log.contains("ERROR") {
-        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).red()
-    } else if log.contains("CRITICAL") {
-        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()])
-            .bold()
-            .black()
-            .on_red()
-    } else {
-        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()])
-    }
-}
-
 fn handle_key(key: event::KeyEvent, model: &mut Model) -> Option<Message> {
-    let ctrl_c = key.code == KeyCode::Char('c') && key.modifiers.contains(KeyModifiers::CONTROL);
 
-    if model.search_mode == SearchMode::Search && key.code != KeyCode::Esc && !ctrl_c {
-        match key.code {
-            KeyCode::Enter => model.submit_message(),
-            KeyCode::Char(insert_char) => model.enter_char(insert_char),
-            KeyCode::Backspace => model.delete_char(),
-            KeyCode::Left => model.move_cursor_left(),
-            KeyCode::Right => model.move_cursor_right(),
-            _ => {}
-        }
-        return None;
-
-    }
-
-    if ctrl_c && model.search_mode == SearchMode::Search {
-        return Some(Message::ToggleSearch);
+    if model.search_mode == SearchMode::Search {
+        return match key.code {
+            KeyCode::Enter | KeyCode::Esc => Some(Message::ToggleSearch),
+            // Ctrl-c can exit search mode
+            KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                Some(Message::ToggleSearch)
+            }
+            KeyCode::Char(insert_char) => Some(Message::AddChar(insert_char)),
+            KeyCode::Backspace => Some(Message::Delete),
+            KeyCode::Left => Some(Message::MoveCursorLeft),
+            KeyCode::Right => Some(Message::MoveCursorRight),
+            _ => None,
+        };
     }
 
     match key.code {
         KeyCode::Char('j') | KeyCode::Down => Some(Message::MoveDown),
         KeyCode::Char('k') | KeyCode::Up => Some(Message::MoveUp),
         KeyCode::Char('q') => Some(Message::Quit),
-        KeyCode::Char('s') | KeyCode::Char('/') | KeyCode::Esc => Some(Message::ToggleSearch),
+        KeyCode::Char('s') | KeyCode::Char('/') => Some(Message::ToggleSearch),
         KeyCode::Char('f') => {
             if model.log_filter == Filter::SELECT {
                 Some(Message::ApplyFilter(Filter::NONE))
@@ -132,6 +114,13 @@ fn handle_key(key: event::KeyEvent, model: &mut Model) -> Option<Message> {
                 None
             }
         }
+        KeyCode::Char('d') => {
+            if model.log_filter == Filter::SELECT {
+                Some(Message::ApplyFilter(Filter::DEBUG))
+            } else {
+                None
+            }
+        }
         _ => None,
     }
 }
@@ -155,6 +144,7 @@ fn render_opts(model: &Model, frame: &mut Frame, opts_area: Rect) {
                     "warning: w",
                     "error: e",
                     "critical: c",
+                    "debug: d",
                 ])])
                 .cyan()
                 .bold();
@@ -168,6 +158,23 @@ fn render_opts(model: &Model, frame: &mut Frame, opts_area: Rect) {
             frame.render_widget(opts, opts_area);
         }
     };
+}
+
+fn get_formatted_row(log: &String) -> Row {
+    if log.contains("INFO") {
+        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).cyan()
+    } else if log.contains("WARNING") {
+        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).yellow()
+    } else if log.contains("ERROR") {
+        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).red()
+    } else if log.contains("CRITICAL") {
+        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()])
+            .bold()
+            .black()
+            .on_red()
+    } else {
+        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()])
+    }
 }
 
 fn set_cursor_pos(model: &mut Model, frame: &mut Frame, input_area: Rect) {

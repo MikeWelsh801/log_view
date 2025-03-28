@@ -47,4 +47,3 @@ pub fn run(config: Config) -> Result<()> {
     tui::restore_terminal()?;
     Ok(())
 }
-
