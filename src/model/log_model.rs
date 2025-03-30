@@ -189,11 +189,12 @@ pub(crate) fn get_filtered_logs(model: &mut Model) -> Vec<String> {
         Filter::NONE | Filter::SELECT => "",
     };
 
-    let mut logs = model.logs
-            .iter()
-            .filter(|line| line.contains(filter_str))
-            .map(|l| l.to_string())
-            .collect::<Vec<String>>();
+    let mut logs = model
+        .logs
+        .iter()
+        .filter(|line| line.contains(filter_str))
+        .map(|l| l.to_string())
+        .collect::<Vec<String>>();
 
     apply_search(model, &mut logs);
 

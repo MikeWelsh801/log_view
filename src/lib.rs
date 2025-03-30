@@ -23,7 +23,7 @@ impl Config {
 
         Ok(Config {
             file_path,
-            max_len: 50,
+            max_len: 32,
         })
     }
 }

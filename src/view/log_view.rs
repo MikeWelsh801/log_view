@@ -19,13 +19,36 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
         ])
         .areas(frame.area());
 
+    let [log_list, log_preview] = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
+        .areas(log_area);
+
     let block = Block::bordered()
         .border_type(BorderType::Rounded)
         .title("logs")
         .title_alignment(Alignment::Center);
 
     let filtered_logs = get_filtered_logs(model);
-    let lines = filtered_logs.iter().map(|l| get_formatted_row(l)).collect();
+    let current_log_idx: usize = filtered_logs.len().checked_sub(1).unwrap_or(0);
+
+    let lines = filtered_logs
+        .iter()
+        .enumerate()
+        .map(|(idx, l)| get_formatted_row(l, current_log_idx == idx))
+        .collect();
+
+    let default = String::new();
+    let curr_log = filtered_logs.get(current_log_idx).unwrap_or(&default);
+    let preview_paragraph = Paragraph::new(curr_log.clone())
+        .wrap(Wrap { trim: false })
+        .block(
+            Block::bordered()
+                .border_type(BorderType::Rounded)
+                .title("preview")
+                .title_alignment(Alignment::Center),
+        );
+
     let line_paragraph = Table::from(lines).block(block);
 
     let search = Paragraph::new(model.search_input.as_str())
@@ -40,7 +63,8 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
         );
 
     render_opts(model, frame, opts_area);
-    frame.render_widget(line_paragraph, log_area);
+    frame.render_widget(line_paragraph, log_list);
+    frame.render_widget(preview_paragraph, log_preview);
     frame.render_widget(search, search_area);
 
     set_cursor_pos(model, frame, search_area);
@@ -58,7 +82,6 @@ pub(crate) fn handle_event(m: &mut Model) -> color_eyre::Result<Option<Message>>
 }
 
 fn handle_key(key: event::KeyEvent, model: &mut Model) -> Option<Message> {
-
     if model.search_mode == SearchMode::Search {
         return match key.code {
             KeyCode::Enter | KeyCode::Esc => Some(Message::ToggleSearch),
@@ -160,8 +183,12 @@ fn render_opts(model: &Model, frame: &mut Frame, opts_area: Rect) {
     };
 }
 
-fn get_formatted_row(log: &String) -> Row {
-    if log.contains("INFO") {
+fn get_formatted_row(log: &String, current_log: bool) -> Row {
+    if current_log {
+        Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()])
+            .black()
+            .on_cyan()
+    } else if log.contains("INFO") {
         Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).cyan()
     } else if log.contains("WARNING") {
         Row::new(vec![String::from_utf8(strip(log.as_bytes())).unwrap()]).yellow()
