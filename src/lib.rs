@@ -11,7 +11,6 @@ pub(crate) use crate::view::tui;
 
 pub struct Config {
     file_path: String,
-    max_len: usize,
 }
 
 impl Config {
@@ -23,7 +22,6 @@ impl Config {
 
         Ok(Config {
             file_path,
-            max_len: 32,
         })
     }
 }

@@ -34,6 +34,7 @@ pub(crate) enum SearchMode {
 pub(crate) struct Model {
     view_offset: usize,
     view_height: usize,
+    g_modifier: bool,
     pub(crate) search_mode: SearchMode,
     pub(crate) search_input: String,
     pub(crate) cursor_pos: usize,
@@ -47,7 +48,8 @@ impl Model {
     pub(crate) fn new(config: Config) -> Result<Model> {
         let mut model = Model {
             view_offset: 0,
-            view_height: config.max_len,
+            view_height: 0,
+            g_modifier: false,
             search_mode: SearchMode::default(),
             search_input: String::new(),
             cursor_pos: 0,
@@ -59,6 +61,10 @@ impl Model {
 
         model.refresh_logs();
         Ok(model)
+    }
+
+    pub(crate) fn set_view_height(&mut self, height: usize) {
+        self.view_height = height;
     }
 
     /// Returns the byte index based on the character position.
@@ -147,34 +153,47 @@ fn reset_search(model: &mut Model) {
 /*****************************************************************************/
 
 pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
+    if model.g_modifier {
+        match msg {
+            Message::MoveTop => {
+                model.view_offset = 0xffff;
+                return None;
+            },
+            _ => model.g_modifier = false,
+        };
+    }
+
     match msg {
         Message::MoveUp => {
-            model.view_offset += 1;
-        }
+                model.view_offset += 1;
+            }
         Message::MoveDown => {
-            if model.view_offset > 0 {
-                model.view_offset -= 1;
+                if model.view_offset > 0 {
+                    model.view_offset -= 1;
+                }
             }
-        }
         Message::ApplyFilter(f) => {
-            model.log_filter = f;
-        }
+                model.log_filter = f;
+                model.view_offset = 0;
+            }
         Message::Quit => {
-            model.running = RunningState::Done;
-        }
+                model.running = RunningState::Done;
+            }
         Message::ToggleSearch => match model.search_mode {
-            SearchMode::Search => {
-                reset_search(model);
-            }
-            SearchMode::None => {
-                model.search_mode = SearchMode::Search;
-            }
-        },
+                SearchMode::Search => {
+                    reset_search(model);
+                }
+                SearchMode::None => {
+                    model.search_mode = SearchMode::Search;
+                }
+            },
         Message::AddChar(c) => enter_char(model, c),
         Message::Delete => delete_char(model),
         Message::MoveCursorLeft => move_cursor_left(model),
         Message::MoveCursorRight => move_cursor_right(model),
         Message::RefreshLogs => model.refresh_logs(),
+        Message::MoveTop => model.g_modifier = true,
+        Message::MoveBottom => model.view_offset = 0,
     };
     None
 }
@@ -196,15 +215,21 @@ pub(crate) fn get_filtered_logs(model: &mut Model) -> Vec<String> {
         .map(|l| l.to_string())
         .collect::<Vec<String>>();
 
-    apply_search(model, &mut logs);
+    match apply_search(model, &mut logs) {
+        true => logs,
+        false => {
+            if model.view_offset + model.view_height > logs.len() {
+                model.view_offset = logs.len().checked_sub(model.view_height).unwrap_or(0);
+            }
 
-    let end_idx = logs.len().checked_sub(model.view_offset).unwrap_or(0);
-    let start_idx = end_idx.checked_sub(model.view_height).unwrap_or(0);
-
-    logs.drain(start_idx..end_idx).collect()
+            let end_idx = logs.len().checked_sub(model.view_offset).unwrap_or(model.view_height);
+            let start_idx = end_idx.checked_sub(model.view_height).unwrap_or(0);
+            logs.drain(start_idx..end_idx).collect()
+        },
+    }
 }
 
-fn apply_search(model: &mut Model, logs: &mut Vec<String>) {
+fn apply_search(model: &mut Model, logs: &mut Vec<String>) -> bool {
     if !model.search_input.is_empty() {
         let search_logs: Vec<&str> = logs.iter().map(|log| log.as_str()).collect();
 
@@ -213,5 +238,7 @@ fn apply_search(model: &mut Model, logs: &mut Vec<String>) {
             .map(|res| res.0.to_string())
             .rev()
             .collect();
+        return true;
     };
+    false
 }

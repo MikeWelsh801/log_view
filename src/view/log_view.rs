@@ -19,6 +19,8 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
         ])
         .areas(frame.area());
 
+    model.set_view_height((log_area.height - 2) as usize);
+
     let [log_list, log_preview] = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(60), Constraint::Percentage(40)])
@@ -101,6 +103,8 @@ fn handle_key(key: event::KeyEvent, model: &mut Model) -> Option<Message> {
         KeyCode::Char('j') | KeyCode::Down => Some(Message::MoveDown),
         KeyCode::Char('k') | KeyCode::Up => Some(Message::MoveUp),
         KeyCode::Char('q') => Some(Message::Quit),
+        KeyCode::Char('g') => Some(Message::MoveTop),
+        KeyCode::Char('G') => Some(Message::MoveBottom),
         KeyCode::Char('s') | KeyCode::Char('/') => Some(Message::ToggleSearch),
         KeyCode::Char('f') => {
             if model.log_filter == Filter::SELECT {
