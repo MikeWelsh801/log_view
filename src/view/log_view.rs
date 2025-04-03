@@ -42,7 +42,7 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
 
     let default = String::new();
     let curr_log = filtered_logs.get(current_log_idx).unwrap_or(&default);
-    let preview_paragraph = Paragraph::new(curr_log.clone())
+    let preview_paragraph = Paragraph::new(String::from_utf8(strip(curr_log.as_bytes())).unwrap())
         .wrap(Wrap { trim: false })
         .block(
             Block::bordered()
