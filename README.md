@@ -1,6 +1,4 @@
 # Log Viewer
-Welcome to my nifty log viewer. I wrote this in a day, so there are probably numerous
-bugs.
 
 ![Main Screen](./screenshots/main_view.png) 
 
