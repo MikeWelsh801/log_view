@@ -32,16 +32,15 @@ pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
         .title_alignment(Alignment::Center);
 
     let filtered_logs = get_filtered_logs(model);
-    let current_log_idx: usize = filtered_logs.len().checked_sub(1).unwrap_or(0);
 
     let lines = filtered_logs
         .iter()
         .enumerate()
-        .map(|(idx, l)| get_formatted_row(l, current_log_idx == idx))
+        .map(|(idx, l)| get_formatted_row(l, model.line_idx == idx))
         .collect();
 
     let default = String::new();
-    let curr_log = filtered_logs.get(current_log_idx).unwrap_or(&default);
+    let curr_log = filtered_logs.get(model.line_idx).unwrap_or(&default);
     let preview_paragraph = Paragraph::new(String::from_utf8(strip(curr_log.as_bytes())).unwrap())
         .wrap(Wrap { trim: false })
         .block(

@@ -34,6 +34,7 @@ pub(crate) enum SearchMode {
 pub(crate) struct Model {
     view_offset: usize,
     view_height: usize,
+    pub(crate) line_idx: usize,
     g_modifier: bool,
     pub(crate) search_mode: SearchMode,
     pub(crate) search_input: String,
@@ -49,6 +50,7 @@ impl Model {
         let mut model = Model {
             view_offset: 0,
             view_height: 0,
+            line_idx: 0,
             g_modifier: false,
             search_mode: SearchMode::default(),
             search_input: String::new(),
@@ -157,6 +159,7 @@ pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
         match msg {
             Message::MoveTop => {
                 model.view_offset = 0xffff;
+                model.line_idx = 0;
                 return None;
             }
             _ => model.g_modifier = false,
@@ -165,11 +168,17 @@ pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
 
     match msg {
         Message::MoveUp => {
-            model.view_offset += 1;
+            if model.line_idx == 0 {
+                model.view_offset += 1;
+            } else {
+                model.line_idx -= 1;
+            }
         }
         Message::MoveDown => {
-            if model.view_offset > 0 {
-                model.view_offset -= 1;
+            if model.line_idx == model.view_height - 1 {
+                model.view_offset = model.view_offset.checked_sub(1).unwrap_or(0);
+            } else {
+                model.line_idx += 1;
             }
         }
         Message::ApplyFilter(f) => {
@@ -192,7 +201,10 @@ pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
         Message::MoveCursorLeft => move_cursor_left(model),
         Message::MoveCursorRight => move_cursor_right(model),
         Message::MoveTop => model.g_modifier = true,
-        Message::MoveBottom => model.view_offset = 0,
+        Message::MoveBottom => {
+            model.view_offset = 0;
+            model.line_idx = model.view_height.checked_sub(1).unwrap_or(0);
+        }
     };
     None
 }
