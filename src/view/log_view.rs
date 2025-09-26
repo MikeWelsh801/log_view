@@ -7,15 +7,15 @@ use std::time::Duration;
 use strip_ansi_escapes::strip;
 
 pub(crate) fn view(frame: &mut Frame, model: &mut Model) {
-    let line_height = 88;
-    let opts_height = 4;
+    let opts_height = 3;
+    let filter_height = 1;
 
     let [log_area, search_area, opts_area] = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Percentage(line_height),
-            Constraint::Percentage(100 - line_height - opts_height),
-            Constraint::Percentage(opts_height),
+            Constraint::Percentage(100),
+            Constraint::Length(opts_height),
+            Constraint::Length(filter_height),
         ])
         .areas(frame.area());
 

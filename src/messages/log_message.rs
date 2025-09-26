@@ -11,6 +11,5 @@ pub(crate) enum Message {
     MoveDown,
     ToggleSearch,
     ApplyFilter(Filter),
-    RefreshLogs,
     Quit,
 }

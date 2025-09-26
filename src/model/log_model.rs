@@ -191,7 +191,6 @@ pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
         Message::Delete => delete_char(model),
         Message::MoveCursorLeft => move_cursor_left(model),
         Message::MoveCursorRight => move_cursor_right(model),
-        Message::RefreshLogs => model.refresh_logs(),
         Message::MoveTop => model.g_modifier = true,
         Message::MoveBottom => model.view_offset = 0,
     };
