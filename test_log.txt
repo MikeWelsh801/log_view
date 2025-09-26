@@ -192,6 +192,6 @@
 [INFO] - Search term
 [INFO] just some information
 [INFO] - Search term
-[CRITICAL] - a really really really really really really really really really really really really really looooooooooooooooong damn log
+[CRITICAL] - a really really really really really really really really really really really really really looooooooooooooooong log
 [INFO] just some information
 [INFO] - Search term
