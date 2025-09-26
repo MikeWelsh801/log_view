@@ -140,6 +140,12 @@ fn handle_key(key: event::KeyEvent, model: &mut Model) -> Option<Message> {
                 None
             }
         }
+        KeyCode::Char('u') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            Some(Message::MoveUpPage)
+        }
+        KeyCode::Char('d') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+            Some(Message::MoveDownPage)
+        }
         KeyCode::Char('d') => {
             if model.log_filter == Filter::SELECT {
                 Some(Message::ApplyFilter(Filter::DEBUG))

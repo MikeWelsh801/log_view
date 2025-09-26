@@ -105,6 +105,23 @@ impl Model {
 
         self.logs = logs;
     }
+
+    fn move_up_page(&mut self) {
+        self.view_offset += self.view_height;
+        if self.view_offset == self.logs.len() {
+            self.line_idx = 0;
+        }
+    }
+
+    fn move_down_page(&mut self) {
+        self.view_offset = self
+            .view_offset
+            .checked_sub(self.view_height)
+            .unwrap_or_else(|| {
+                self.line_idx = self.view_height - 1;
+                0
+            });
+    }
 }
 
 /************************ Search Input Functions *****************************/
@@ -184,6 +201,7 @@ pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
         Message::ApplyFilter(f) => {
             model.log_filter = f;
             model.view_offset = 0;
+            model.line_idx = 0;
         }
         Message::Quit => {
             model.running = RunningState::Done;
@@ -205,6 +223,8 @@ pub(crate) fn update(model: &mut Model, msg: Message) -> Option<Message> {
             model.view_offset = 0;
             model.line_idx = model.view_height.checked_sub(1).unwrap_or(0);
         }
+        Message::MoveUpPage => model.move_up_page(),
+        Message::MoveDownPage => model.move_down_page(),
     };
     None
 }
